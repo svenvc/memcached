@@ -1,3 +1,6 @@
+"
+I hold setting related to the memcached client (unused for now)
+"
 Class {
 	#name : #MDSettings,
 	#superclass : #Object,

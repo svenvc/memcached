@@ -1,3 +1,6 @@
+"
+(unimplemented placeholder)
+"
 Class {
 	#name : #MDMultipleRetrievalCommand,
 	#superclass : #MDRetrievalCommand,

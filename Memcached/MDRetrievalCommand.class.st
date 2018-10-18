@@ -1,3 +1,6 @@
+"
+Common functionality for retrieval commands
+"
 Class {
 	#name : #MDRetrievalCommand,
 	#superclass : #MDMultilineCommand,

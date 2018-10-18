@@ -1,3 +1,6 @@
+"
+I am the UTF8 codec
+"
 Class {
 	#name : #MDUtf8Codec,
 	#superclass : #MDNullCodec,

@@ -1,3 +1,6 @@
+"
+I am the internal codec.
+"
 Class {
 	#name : #MDInternalCodec,
 	#superclass : #Object,

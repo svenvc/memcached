@@ -1,3 +1,6 @@
+"
+Retrieve the value of a single key
+"
 Class {
 	#name : #MDSingleRetrievalCommand,
 	#superclass : #MDRetrievalCommand,

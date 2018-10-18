@@ -1,3 +1,6 @@
+"
+I represent the information of a memcached server, its host address and port
+"
 Class {
 	#name : #MDServer,
 	#superclass : #Object,

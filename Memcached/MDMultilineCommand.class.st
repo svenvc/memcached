@@ -1,3 +1,6 @@
+"
+Superclass of commands that return multiple lines
+"
 Class {
 	#name : #MDMultilineCommand,
 	#superclass : #MDCommand,

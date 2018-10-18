@@ -1,3 +1,6 @@
+"
+Common abstract memcached client
+"
 Class {
 	#name : #MDCacheClientBase,
 	#superclass : #Object,

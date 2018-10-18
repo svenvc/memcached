@@ -1,3 +1,6 @@
+"
+MDItem holds information about a single key: it value (data) and flags
+"
 Class {
 	#name : #MDItem,
 	#superclass : #Object,

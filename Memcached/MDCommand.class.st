@@ -1,3 +1,6 @@
+"
+Abstract superclass of all memcached protocl commands
+"
 Class {
 	#name : #MDCommand,
 	#superclass : #Object,

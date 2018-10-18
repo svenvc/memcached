@@ -1,3 +1,6 @@
+"
+I am the Null codec
+"
 Class {
 	#name : #MDNullCodec,
 	#superclass : #Object,
