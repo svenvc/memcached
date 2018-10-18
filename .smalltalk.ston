@@ -1,0 +1,9 @@
+SmalltalkCISpec {
+  #loading : [
+    SCIMetacelloLoadSpec {
+      #baseline : 'Memcached',
+      #directory : 'repository',
+      #platforms : [ #pharo ]
+    }
+  ]
+}
