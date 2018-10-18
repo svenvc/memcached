@@ -1,3 +1,6 @@
+"
+Abstract parent for MDClient unit tests
+"
 Class {
 	#name : #MDClientTest,
 	#superclass : #TestCase,

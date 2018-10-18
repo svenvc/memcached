@@ -1,3 +1,6 @@
+"
+Unit tests for MDProtocol
+"
 Class {
 	#name : #MDProtocolTest,
 	#superclass : #TestCase,

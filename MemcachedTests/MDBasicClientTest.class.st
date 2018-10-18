@@ -1,3 +1,6 @@
+"
+Unit tests for MDBasicClient
+"
 Class {
 	#name : #MDBasicClientTest,
 	#superclass : #TestCase,

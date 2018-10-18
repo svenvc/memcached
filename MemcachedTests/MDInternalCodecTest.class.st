@@ -1,3 +1,6 @@
+"
+Unit tests for MDInternalCodec
+"
 Class {
 	#name : #MDInternalCodecTest,
 	#superclass : #TestCase,

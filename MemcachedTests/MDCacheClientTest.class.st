@@ -1,3 +1,6 @@
+"
+Unit tests for MDCacheClient
+"
 Class {
 	#name : #MDCacheClientTest,
 	#superclass : #MDClientTest,

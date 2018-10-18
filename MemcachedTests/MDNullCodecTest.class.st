@@ -1,3 +1,6 @@
+"
+Unit tests for MDNullCodec
+"
 Class {
 	#name : #MDNullCodecTest,
 	#superclass : #TestCase,
