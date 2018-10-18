@@ -1,6 +1,8 @@
 # memcached
 A client for Memcached, a distributed memory caching system
 
+[![Build Status](https://travis-ci.org/svenvc/memcached.svg?branch=master)](https://travis-ci.org/svenvc/memcached)
+
 ## About
 - https://en.wikipedia.org/wiki/Memcached
 - http://memcached.org
