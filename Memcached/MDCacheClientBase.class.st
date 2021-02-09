@@ -65,9 +65,12 @@ MDCacheClientBase class >> serialize: object [
 
 { #category : #'socket-pool' }
 MDCacheClientBase class >> serverAt: aKey ifAbsent: aBlock [
+
 	| found |
+
 	found := self serverPool findFirst: [ :e | e first = aKey ].
-	found 	ifNil: [ ^ {aKey. (DateAndTime now). (aBlock value)} ].
+	found
+		ifNil: [ ^ Array with: aKey with: DateAndTime now with: aBlock value ].
 	DateAndTime now - found second > self defaultConnectionLifetime
 		ifFalse: [ ^ found ].
 	found third quit execute.

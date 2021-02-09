@@ -22,12 +22,15 @@ MDClientTest >> clientClass [
 
 { #category : #running }
 MDClientTest >> sampleObject [
-	^ {true.
-	1.
-	'cool'.
-	{}.
-	4.0.
-	(Date today)}
+
+	^ OrderedCollection new
+		add: true;
+		add: 1;
+		add: 'cool';
+		add: #();
+		add: 4.0;
+		add: Date today;
+		asArray
 ]
 
 { #category : #running }
