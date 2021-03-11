@@ -67,7 +67,9 @@ MDBasicClient >> at: key ifAbsent: block [
 
 	| found |
 	"Evaluate the block outside the error handler to release the lock inside"
-	(found := [ self get: key ] on: MDKeyNotFoundError do: [ nil ]) isNil
+	(found := [ self get: key ]
+		on: MDKeyNotFoundError
+		do: [ :signal | signal return: nil ]) isNil
 		ifTrue: [ ^ block value ].
 	^ found
 ]
@@ -181,8 +183,11 @@ MDBasicClient >> get: key [
 { #category : #convenience }
 MDBasicClient >> includesKey: key [
 	"Return a boolean indicating whether or not I have data stored under key"
-	
-	^ [ self get: key. true ] on: MDKeyNotFoundError do: [ false ]
+
+	^ [ self get: key.
+	true ]
+		on: MDKeyNotFoundError
+		do: [ :signal | signal return: false ]
 ]
 
 { #category : #operations }
