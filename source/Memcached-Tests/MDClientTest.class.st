@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'cache'
 	],
-	#category : #MemcachedTests
+	#category : #'Memcached-Tests'
 }
 
 { #category : #'as yet unclassified' }

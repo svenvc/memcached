@@ -84,7 +84,9 @@ MDCacheClientBase class >> serverPool [
 
 { #category : #private }
 MDCacheClientBase >> assertServers [
-	serverList ifNil: [ Error signal: 'Memcache servers not configured!' ]
+
+	serverList
+		ifNil: [ Error signal: 'Memcache servers not configured!' ]
 ]
 
 { #category : #private }
@@ -246,10 +248,10 @@ MDCacheClientBase >> startServer: anIp onPort: aPort [
 	^ self class
 		serverAt: (anIp joinUsing: '.') , ':' , aPort asString
 		ifAbsent: [ [ retries := retries + 1.
-			MDServer new
+			MDProtocolBuilder new
 				host: anIp asByteArray;
 				port: aPort;
-				openProtocol ]
+				build ]
 				on: ConnectionTimedOut
 				do: [ :signal | 
 					retries > self class defaultConnectionRetries
