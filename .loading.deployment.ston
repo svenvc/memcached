@@ -3,14 +3,11 @@ SmalltalkCISpec {
     SCIMetacelloLoadSpec {
       #baseline : 'Memcached',
       #directory : 'source',
-      #load : [ 'CI' ],
-      #platforms : [ #pharo ]
+      #load : [ 'Deployment' ],
+      #platforms : [  #pharo ]
     }
   ],
   #testing : {
-    #coverage : {
-      #packages : [ 'Memcached*' ],
-      #format : #lcov
-    }
+    #failOnZeroTests : false
   }
 }

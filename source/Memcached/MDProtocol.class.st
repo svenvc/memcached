@@ -72,20 +72,6 @@ MDProtocol >> crlf [
 ]
 
 { #category : #'private-decoding' }
-MDProtocol >> decodeAsciiString: aByteArray startingAt: anInteger [
-	| buffer totalSize |
-	totalSize := aByteArray size.
-	buffer := WriteStream on: (String new: totalSize - anInteger).
-	anInteger to: totalSize do: [ :index |
-		| value |
-		value := aByteArray at: index.
-		value = 32 "space"
-			ifTrue: [ ^buffer contents ].
-		buffer nextPut: (Character value: value) ].
-	^buffer contents
-]
-
-{ #category : #'private-decoding' }
 MDProtocol >> decodeUnsignedInteger: aByteArray startingAt: anInteger [
 	| buffer totalSize |
 	totalSize := aByteArray size.

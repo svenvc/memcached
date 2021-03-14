@@ -111,8 +111,7 @@ MDStatisticsCommand >> decodeResponse: anArray [
 	| stats codec processId uptime time version userTime systemTime currentItems totalItems bytesUsed currentConnections totalConnections connectionStructures retrievalRequests storageRequests hits misses evictions bytesRead bytesWritten maximumBytes zero pointerSize |
 	stats := Dictionary new.
 	codec := protocol codec.
-	anArray do: [ :each |
-		stats at: (each at: 1) put: (each at: 2) ].
+	anArray do: [ :each | stats at: (each at: 1) put: (each at: 2) ].
 	zero := ByteArray with: 48.
 	processId := codec decodeUnsignedInteger: (stats at: 'pid').
 	uptime := codec seconds: (codec decodeUnsignedInteger: (stats at: 'uptime')).
@@ -135,7 +134,8 @@ MDStatisticsCommand >> decodeResponse: anArray [
 	bytesWritten := codec decodeUnsignedInteger: (stats at: 'bytes_written').
 	maximumBytes := codec decodeUnsignedInteger: (stats at: 'limit_maxbytes').
 	pointerSize := codec decodeUnsignedInteger: (stats at: 'pointer_size' ifAbsent: [ zero ]).
-	^MDStatistic new
+	
+	^ MDStatistic new
 		processId: processId;
 		uptime: uptime;
 		time: time;

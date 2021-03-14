@@ -4,7 +4,7 @@ Unit tests for MDCacheClient
 Class {
 	#name : #MDCacheClientTest,
 	#superclass : #MDClientTest,
-	#category : #MemcachedTests
+	#category : #'Memcached-Tests'
 }
 
 { #category : #running }
