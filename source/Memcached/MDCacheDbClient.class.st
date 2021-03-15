@@ -26,8 +26,12 @@ MDCacheDbClient >> set: aSymbol value: aValue expires: aDuration [
 	super
 		set: aSymbol
 		value:
-			{(aDuration ifNil: [ DateAndTime year: 2020 day: 1 ] ifNotNil: [ DateAndTime now + aDuration ]).
-			aValue}
+			(Array
+				with:
+					(aDuration
+						ifNil: [ DateAndTime now + 10 days ]
+						ifNotNil: [ DateAndTime now + aDuration ])
+				with: aValue)
 		expires: aDuration.
 	^ aValue
 ]

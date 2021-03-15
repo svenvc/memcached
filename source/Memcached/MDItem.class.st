@@ -24,18 +24,8 @@ MDItem >> data [
 ]
 
 { #category : #accessing }
-MDItem >> data: anObject [
-	data := anObject
-]
-
-{ #category : #accessing }
 MDItem >> flags [
 	^flags
-]
-
-{ #category : #accessing }
-MDItem >> flags: anObject [
-	flags := anObject
 ]
 
 { #category : #'initialize-release' }
@@ -48,9 +38,4 @@ MDItem >> initializeWithKey: aString flags: anInteger data: aByteArray [
 { #category : #accessing }
 MDItem >> key [
 	^key
-]
-
-{ #category : #accessing }
-MDItem >> key: anObject [
-	key := anObject
 ]

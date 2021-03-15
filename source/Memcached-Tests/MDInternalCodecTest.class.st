@@ -7,7 +7,7 @@ Class {
 	#instVars : [
 		'codec'
 	],
-	#category : #MemcachedTests
+	#category : #'Memcached-Tests'
 }
 
 { #category : #running }

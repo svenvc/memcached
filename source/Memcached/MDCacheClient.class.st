@@ -37,6 +37,7 @@ MDCacheClient >> get: aString [
 
 { #category : #protocol }
 MDCacheClient >> set: aString value: aValue expires: aDuration [
+	
 	^ self
 		set: aString
 		value: aValue
@@ -55,7 +56,7 @@ MDCacheClient >> set: aString value: aValue expires: aDuration refreshed: isRefr
 		ifNotNil: [ DateAndTime now + aDuration ].
 	super
 		set: aString
-		value: { timeout. 	isRefreshed. aValue } 
+		value: (Array with: timeout with: isRefreshed with: aValue)
 		expires:
 			(aDuration
 				ifNil: [ 10 days ]

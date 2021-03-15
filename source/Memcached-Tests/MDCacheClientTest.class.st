@@ -4,7 +4,7 @@ Unit tests for MDCacheClient
 Class {
 	#name : #MDCacheClientTest,
 	#superclass : #MDClientTest,
-	#category : #MemcachedTests
+	#category : #'Memcached-Tests'
 }
 
 { #category : #running }
@@ -14,7 +14,8 @@ MDCacheClientTest >> clientClass [
 
 { #category : #running }
 MDCacheClientTest >> serverList [
-	^ {'127.0.0.1:11211'}
+
+	^ #('127.0.0.1:11211')
 ]
 
 { #category : #running }

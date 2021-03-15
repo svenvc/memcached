@@ -65,9 +65,12 @@ MDCacheClientBase class >> serialize: object [
 
 { #category : #'socket-pool' }
 MDCacheClientBase class >> serverAt: aKey ifAbsent: aBlock [
+
 	| found |
+
 	found := self serverPool findFirst: [ :e | e first = aKey ].
-	found 	ifNil: [ ^ {aKey. (DateAndTime now). (aBlock value)} ].
+	found
+		ifNil: [ ^ Array with: aKey with: DateAndTime now with: aBlock value ].
 	DateAndTime now - found second > self defaultConnectionLifetime
 		ifFalse: [ ^ found ].
 	found third quit execute.
@@ -81,7 +84,9 @@ MDCacheClientBase class >> serverPool [
 
 { #category : #private }
 MDCacheClientBase >> assertServers [
-	serverList ifNil: [ Error signal: 'Memcache servers not configured!' ]
+
+	serverList
+		ifNil: [ Error signal: 'Memcache servers not configured!' ]
 ]
 
 { #category : #private }
@@ -103,19 +108,17 @@ MDCacheClientBase >> decrement: aString [
 
 { #category : #protocol }
 MDCacheClientBase >> get: aString [
+
 	self assertServers.
-	^ [ [ | item |
+
+	^ [ | item |
 	item := self
-		whileConnected: [ 
-			((self serverForKey: aString) get)
+		whileConnected: [ (self serverForKey: aString) get
 				key: aString asByteArray;
 				execute ].
-	item data
-		ifNotNil: [ :value | self class materialize: item data ] ]
-		on: MDKeyNotFoundError
-		do: [ nil ] ]
-		on: Error
-		do: [ nil ]
+	item data ifNotNil: [ :value | self class materialize: item data ] ]
+		on: MDKeyNotFoundError , Error
+		do: [ :signal | signal return: nil ]
 ]
 
 { #category : #protocol }
@@ -140,9 +143,9 @@ MDCacheClientBase >> increment: aString [
 				key: aString asByteArray;
 				execute ] ]
 		on: MDKeyNotFoundError
-		do: [ :e | 
+		do: [ :signal | 
 			self setCounter: aString value: 0.
-			e retry ]
+			signal retry ]
 ]
 
 { #category : #private }
@@ -152,13 +155,18 @@ MDCacheClientBase >> lock [
 
 { #category : #private }
 MDCacheClientBase >> open [
+
 	self assertServers.
-	servers := (serverList collect: [ :e | self startServer: e key onPort: e value asNumber ]) select: [ :e | e notNil ]
+	servers := (serverList
+		collect: [ :e | self startServer: e key onPort: e value asNumber ])
+		select: [ :signal | signal notNil ]
 ]
 
 { #category : #protocol }
 MDCacheClientBase >> remove: aString [
+	
 	self assertServers.
+	
 	[ 
 	self
 		whileConnected: [ 
@@ -166,9 +174,7 @@ MDCacheClientBase >> remove: aString [
 				key: aString asByteArray;
 				execute ] ]
 		on: Error
-		do: [ :e | 
-			Transcript show: e.
-			nil ]
+		do: [ :signal | signal return: nil ]
 ]
 
 { #category : #private }
@@ -186,6 +192,7 @@ MDCacheClientBase >> serverForKey: aKey [
 
 { #category : #accessing }
 MDCacheClientBase >> serverList: aList [
+
 	serverList := aList
 		collect: [ :e | 
 			| server |
@@ -195,62 +202,63 @@ MDCacheClientBase >> serverList: aList [
 
 { #category : #protocol }
 MDCacheClientBase >> set: aString value: aValue [
+
 	^ self set: aString value: aValue expires: nil
 ]
 
 { #category : #protocol }
 MDCacheClientBase >> set: aString value: aValue expires: aDuration [
+
 	| serialized |
+
 	self assertServers.
-	^ [ 
-	serialized := self class serialize: aValue.
+	^ [ serialized := self class serialize: aValue.
 	self
 		whileConnected: [ 
-			| command |
-			command := ((self serverForKey: aString) set)
+			(self serverForKey: aString) set
 				key: aString asByteArray;
 				data: serialized;
 				expiration: (aDuration ifNil: [ 0 seconds ]) asSeconds asString asByteArray;
 				execute ].
-	aValue ] on: Error do: [ aValue ]
+	aValue ]
+		on: Error
+		do: [:signal | signal return: aValue ]
 ]
 
 { #category : #protocol }
 MDCacheClientBase >> setCounter: aString value: anInteger [
+
 	self assertServers.
-	^ [ 
-	self
-		whileConnected: [ 
-			((self serverForKey: aString) set)
+	^ [ self
+		whileConnected: [ (self serverForKey: aString) set
 				key: aString asByteArray;
 				data: anInteger asString asByteArray;
 				execute ].
 	anInteger ]
 		on: Error
-		do: [ anInteger ]
+		do: [ :signal | signal return: anInteger ]
 ]
 
 { #category : #private }
 MDCacheClientBase >> startServer: anIp onPort: aPort [
+
 	| retries |
 	retries := 0.
+
 	^ self class
 		serverAt: (anIp joinUsing: '.') , ':' , aPort asString
-		ifAbsent: [ 
-			[ 
-			retries := retries + 1.
-			(MDServer new)
+		ifAbsent: [ [ retries := retries + 1.
+			MDProtocolBuilder new
 				host: anIp asByteArray;
 				port: aPort;
-				openProtocol ]
+				build ]
 				on: ConnectionTimedOut
-				do: [ :error | 
+				do: [ :signal | 
 					retries > self class defaultConnectionRetries
-						ifTrue: [ 
-							self removeDeadServerIp: anIp port: aPort.
+						ifTrue: [ self removeDeadServerIp: anIp port: aPort.
 							^ nil ].
 					100 milliSeconds asDelay wait.
-					error retry ] ]
+					signal retry ] ]
 ]
 
 { #category : #private }
@@ -263,11 +271,11 @@ MDCacheClientBase >> whileConnected: aBlock [
 			[ 
 			aBlock
 				on: MDConnectionClosedError , ConnectionClosed
-				do: [ :e | 
+				do: [ :signal | 
 					retried
-						ifTrue: [ e pass ].
+						ifTrue: [ signal pass ].
 					servers := nil.
 					retried := true.
 					self open.
-					e retry ] ] ensure: [ self close ] ]
+					signal retry ] ] ensure: [ self close ] ]
 ]

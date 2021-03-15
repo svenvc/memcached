@@ -9,24 +9,30 @@ Class {
 		'data',
 		'key'
 	],
-	#category : #MemcachedTests
+	#category : #'Memcached-Tests'
 }
 
 { #category : #running }
 MDProtocolTest >> setUp [
-	protocol := MDServer default openProtocol.
-	key :=  ByteArray with: 107 with: 101 with: 121.
-	data := ByteArray with: 49 with: 51 with: 51 with: 55
+
+	protocol := MDProtocolBuilder buildDefault.
+	key := ByteArray with: 107 with: 101 with: 121.
+	data := ByteArray
+		with: 49
+		with: 51
+		with: 51
+		with: 55
 ]
 
 { #category : #running }
 MDProtocolTest >> tearDown [
+
 	protocol quit execute
 ]
 
 { #category : #running }
 MDProtocolTest >> testAdd [
-	"self debug: #testAdd"
+
 	| item expected |
 	self assert: (protocol add key: key; data: data; execute). 
 	
@@ -43,7 +49,9 @@ MDProtocolTest >> testAdd [
 
 { #category : #running }
 MDProtocolTest >> testCount [
+
 	| countKey count |
+
 	countKey :=  ByteArray withAll: #(99 111 117 110 116 75 101 121).
 	protocol set key: countKey; data: (ByteArray with: $0 asciiValue); execute.
 	
@@ -71,8 +79,9 @@ MDProtocolTest >> testCount [
 
 { #category : #running }
 MDProtocolTest >> testFlow [
-	"self run: #testFlow"
+
 	| hasAdded hasDeleted hasReplaced |
+
 	hasAdded := protocol add key: key; data: data; execute.
 	self assert: hasAdded.
 	hasAdded := protocol add key: key; data: data; execute.
@@ -94,11 +103,13 @@ MDProtocolTest >> testFlow [
 
 { #category : #running }
 MDProtocolTest >> testFlushAll [
+
 	protocol flushAll execute
 ]
 
 { #category : #running }
 MDProtocolTest >> testNoKey [
+
 	protocol delete key: key, #(100); execute.
 	self should: [ protocol incr key: key, #(100); execute ] raise: MDKeyNotFoundError.
 	self should: [ protocol decr key: key, #(100); execute ] raise: MDKeyNotFoundError.
@@ -106,5 +117,23 @@ MDProtocolTest >> testNoKey [
 
 { #category : #running }
 MDProtocolTest >> testStats [
-	protocol stats execute
+
+	| stats |
+
+	stats := protocol stats execute.
+	self assert: stats version equals: '1.6.7';
+		assert: stats currentItems > 0;
+		assert: stats evictions equals: 0;
+		assert: stats hits > 0;
+		assert: stats misses > 0;
+		assert: stats retrievalRequests > 0;
+		assert: stats storageRequests > 0;
+		assert: stats totalItems > 0;
+		assert: stats maximumBytes equals: 67108864;
+		assert: stats pointerSize equals: 64;
+		assert: stats bytesRead > 0;
+		assert: stats bytesUsed > 0;
+		assert: stats bytesWritten > 0;
+		assert: stats connectionStructures isInteger;
+		assert: stats currentConnections > 0.
 ]

@@ -27,10 +27,15 @@ Class {
 }
 
 { #category : #initialize }
-MDBasicClient class >> on: mdServer [
-	"MDBasicClient on: (MDServer host: 'myhost' port: 22452)."
+MDBasicClient class >> new [
 
-	^ (self new) server: mdServer; yourself
+	^ self on: MDProtocolBuilder buildDefault
+]
+
+{ #category : #initialize }
+MDBasicClient class >> on: aProtocol [
+
+	^ super new initializeOn: aProtocol
 ]
 
 { #category : #operations }
@@ -67,7 +72,9 @@ MDBasicClient >> at: key ifAbsent: block [
 
 	| found |
 	"Evaluate the block outside the error handler to release the lock inside"
-	(found := [ self get: key ] on: MDKeyNotFoundError do: [ nil ]) isNil
+	(found := [ self get: key ]
+		on: MDKeyNotFoundError
+		do: [ :signal | signal return: nil ]) isNil
 		ifTrue: [ ^ block value ].
 	^ found
 ]
@@ -92,6 +99,7 @@ MDBasicClient >> at: key put: value [
 
 { #category : #'initialize-release' }
 MDBasicClient >> close [
+
 	protocol notNil 
 		ifTrue: [ 
 			protocol quit execute. 
@@ -103,11 +111,6 @@ MDBasicClient >> decode: byteArray [
 	^ decoder isNil
 		ifTrue: [ byteArray ]
 		ifFalse: [ decoder value: byteArray ]
-]
-
-{ #category : #accessing }
-MDBasicClient >> decoder [
-	^ decoder
 ]
 
 { #category : #'initialize-release' }
@@ -147,11 +150,6 @@ MDBasicClient >> encode: object [
 		ifFalse: [ encoder value: object ]
 ]
 
-{ #category : #accessing }
-MDBasicClient >> encoder [
-	^ encoder
-]
-
 { #category : #'initialize-release' }
 MDBasicClient >> encoder: block [
 	"Set my encoder, a one argument block to convert 
@@ -181,8 +179,11 @@ MDBasicClient >> get: key [
 { #category : #convenience }
 MDBasicClient >> includesKey: key [
 	"Return a boolean indicating whether or not I have data stored under key"
-	
-	^ [ self get: key. true ] on: MDKeyNotFoundError do: [ false ]
+
+	^ [ self get: key.
+	true ]
+		on: MDKeyNotFoundError
+		do: [ :signal | signal return: false ]
 ]
 
 { #category : #operations }
@@ -196,11 +197,15 @@ MDBasicClient >> increment: key [
 	^ incr execute
 ]
 
+{ #category : #'initialize-release' }
+MDBasicClient >> initializeOn: aProtocol [
+
+	protocol := aProtocol
+]
+
 { #category : #accessing }
 MDBasicClient >> protocol [
-	protocol isNil 
-		ifTrue: [ 
-			protocol := self server openProtocol ].
+
 	^ protocol
 ]
 
@@ -231,20 +236,6 @@ MDBasicClient >> replace: key value: value [
 		key: key;
 		data: (self encode: value).
 	^ replace execute
-]
-
-{ #category : #accessing }
-MDBasicClient >> server [
-	server isNil 
-		ifTrue: [ 
-			server := MDServer default ].
-	^ server
-]
-
-{ #category : #'initialize-release' }
-MDBasicClient >> server: anMDServer [
-	self close.
-	server := anMDServer
 ]
 
 { #category : #operations }
