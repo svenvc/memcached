@@ -10,7 +10,12 @@ Class {
 { #category : #private }
 MDProtocolBuilderTest >> assertVersion: aString [
 
-	self assert: aString equals: '1.6.7'
+	self 		
+		assert: (($. split: aString) first >= '1')
+		description: 'This test requires at least version 1.5.0 released in 2017-7-21'.
+	self
+		assert: (($. split: aString) second >= '5') 
+		description: 'This test requires at least version 1.5.0 released in 2017-7-21'
 ]
 
 { #category : #testing }

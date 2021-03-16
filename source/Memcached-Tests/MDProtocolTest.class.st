@@ -121,7 +121,9 @@ MDProtocolTest >> testStats [
 	| stats |
 
 	stats := protocol stats execute.
-	self assert: stats version equals: '1.6.7';
+	self 
+		assert: (($. split: stats version) first >= '1') description: 'This test requires at least version 1.5.0 released in 2017-7-21';
+		assert: (($. split: stats version) second >= '5') description: 'This test requires at least version 1.5.0 released in 2017-7-21';
 		assert: stats currentItems > 0;
 		assert: stats evictions equals: 0;
 		assert: stats hits > 0;

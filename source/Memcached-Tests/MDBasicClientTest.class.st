@@ -127,6 +127,13 @@ MDBasicClientTest >> testStats [
 
 	| client |
 	client := MDBasicClient new.
-	[ self assert: client stats version equals: '1.6.7' ]
-		ensure: [ client close ]
+	[ 
+	self 
+		assert: (($. split: client stats version) first >= '1')
+		description: 'This test requires at least version 1.5.0 released in 2017-7-21'.
+	self.
+	self
+		assert: ($. split: client stats version) second >= '5'
+		description: 'This test requires at least version 1.5.0 released in 2017-7-21' ] 
+			ensure: [ client close ]
 ]
