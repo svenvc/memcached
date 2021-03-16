@@ -13,7 +13,7 @@ You can load **Memcached** evaluating:
 ```smalltalk
 Metacello new
 	baseline: 'Memcached';
-	repository: 'github://fortizpenaloza/Memcached:master';
+	repository: 'github://svenvc/Memcached:master';
 	load.
 ```
 >  Change `master` to some released version if you want a pinned version
@@ -28,7 +28,7 @@ setUpDependencies: spec
 	spec
 		baseline: 'Memcached'
 			with: [ spec
-				repository: 'github://fortizpenaloza/Memcached:v{XX}';
+				repository: 'github://svenvc/Memcached:v{XX}';
 				loads: #('Deployment') ];
 		import: 'Memcached'.
 ```
