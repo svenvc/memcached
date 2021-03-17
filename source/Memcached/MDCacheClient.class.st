@@ -23,7 +23,7 @@ MDCacheClient >> get: aString [
 	needsRefreshed := result second.
 	(result first < DateAndTime now and: [ needsRefreshed not ])
 		ifTrue: [ 
-			"this 0 seconds will actually be just the defaultStaleTimeout"
+			"this 0 seconds will actually be just the defaultStaleTime"
 			self
 				set: aString
 				value: result third

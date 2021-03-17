@@ -20,9 +20,10 @@ MDCacheClientTest >> serverList [
 
 { #category : #running }
 MDCacheClientTest >> testStaleSetGet [
+
 	cache remove: #testStaleSetGet.
-	cache set: #testStaleSetGet value: 'test' expires: 3 seconds.
-	4 seconds asDelay wait 
+	cache set: #testStaleSetGet value: 'test' expires: 100 milliSeconds.
+	150 milliSeconds asDelay wait 
 	"first guy should get nil, has time to reload cache".
 	self assert: (cache get: #testStaleSetGet) isNil 
 	"everyone else gets stale value allowing first guy to load from store
